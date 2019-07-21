@@ -1,0 +1,3 @@
+{
+        "reqbody":"$input.path('$')"
+}
