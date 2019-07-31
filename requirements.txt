@@ -1,5 +1,1 @@
 twilio==6.29.0
-
-# Development
-pylint
-black
