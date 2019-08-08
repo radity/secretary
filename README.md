@@ -1,9 +1,13 @@
 **Secretary** is a Twilio app working over Amazon Lambda.
 
-# Prerequisites
+# Tech Stack
 
-- AWS Lambda - API Gateway knowledge
-- Twilio knowledge
+- AWS Lambda
+- API Gateway
+- Twilio
+
+You may want to take a look at this document before starting to implement:
+https://www.twilio.com/docs/sms/tutorials/how-to-receive-and-reply-python-amazon-lambda
 
 # Requirements
 
