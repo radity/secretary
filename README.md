@@ -28,10 +28,7 @@ pip install -r requirements.txt
 In the project root folder:
 
 ```
-cd venv-aws/lib/python3.7/site-packages
-zip -r9 ../../../../secretary_dial/function.zip .
-cd ../../../../secretary_dial/
-zip -g function.zip lambda_function.py
+./create_archives.sh
 ```
 
 Then, you can upload this zip file using the AWS console. Or if you have aws command-line application, try this command, **secretary_dial** is a function name:
