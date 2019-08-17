@@ -1,9 +1,16 @@
+import logging
 import os
 
 from twilio.twiml.voice_response import VoiceResponse
 
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
 
 def lambda_handler(event, context):
+    logger.info(f"EVENTS: {event}")
+    logger.info(f"ENVIRONMENT VARIABLES: {os.environ}")
+
     phone_number = os.environ["PHONE_NUMBER"]
     company_name = os.environ["COMPANY_NAME"]
 

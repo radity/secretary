@@ -1,20 +1,21 @@
+import logging
+
 from twilio.twiml.voice_response import VoiceResponse
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
-    print("Event")
-    print("======")
-    print(event)
-
-    print("Context")
-    print("=======")
-    print(context)
+    logger.info(f"EVENTS: {event}")
 
     response = VoiceResponse()
-    status = "completed"
+    status = event.get("DialCallStatus") or "completed"
     if status in ["busy", "no-answer"]:
         response.say(
-            "Sorry, our team could not answer your call. Please stay on the line to leave a message."
+            "Sorry, our team could not answer your call. Please stay on the line to leave a message.",
+            voice="woman",
+            language="en-US",
         )
         response.record(timeout=10, transcribe=True)
     return response.to_xml()
