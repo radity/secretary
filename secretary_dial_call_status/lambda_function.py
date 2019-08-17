@@ -17,5 +17,5 @@ def lambda_handler(event, context):
             voice="woman",
             language="en-US",
         )
-        response.record(timeout=10, transcribe=True)
+        response.record(timeout=10, transcribe=True, max_length=300)
     return response.to_xml()
