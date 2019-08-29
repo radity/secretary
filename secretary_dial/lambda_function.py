@@ -8,8 +8,8 @@ logger.setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
-    logger.info(f"EVENTS: {event}")
-    logger.info(f"ENVIRONMENT VARIABLES: {os.environ}")
+    logger.info("EVENTS: %s", event)
+    logger.info("ENVIRONMENT VARIABLES: %s", os.environ)
 
     phone_number = os.environ["PHONE_NUMBER"]
     company_name = os.environ["COMPANY_NAME"]

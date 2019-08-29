@@ -7,7 +7,7 @@ logger.setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
-    logger.info(f"EVENTS: {event}")
+    logger.info("EVENTS: %s", event)
 
     response = VoiceResponse()
     status = event.get("DialCallStatus") or "completed"
