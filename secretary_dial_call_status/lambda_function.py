@@ -1,18 +1,18 @@
 import logging
 import os
 
-import boto
-
+import boto3
 from twilio.twiml.voice_response import VoiceResponse
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-AWS_ACCESS_KEY = os.environ["AWS_ACCESS_KEY"]
-AWS_EMAIL_ADDRESS = os.environ["AWS_EMAIL_ADDRESS"]
-AWS_REGION_NAME = os.environ["AWS_REGION_NAME"]
-AWS_SECRET_KEY = os.environ["AWS_SECRET_KEY"]
-MANAGER_EMAIL_ADDRESSES = map(lambda email: email.strip(), os.environ["MANAGER_EMAIL_ADDRESSES"].split(","))
+AWS_REGION = os.environ["AWS_REGION"]
+AWS_ACCESS_KEY = os.environ["AWS_ACCESS_KEY_ID"]
+AWS_SECRET_KEY = os.environ["AWS_SECRET_ACCESS_KEY"]
+SYSTEM_EMAIL_ADDRESS = os.environ["SYSTEM_EMAIL_ADDRESS"]
+MANAGER_EMAIL_ADDRESSES = list(map(lambda email: email.strip(), os.environ["MANAGER_EMAIL_ADDRESSES"].split(",")))
+CHARSET = "UTF-8"
 
 
 class Email(object):
@@ -25,19 +25,27 @@ class Email(object):
         return subject
 
     def get_body(self):
-        body = ["Here you can find all the details about the call:", "", *[f"{k}: {v}" for k, v in self.context_data]]
+        body = [
+            "Here you can find all the details about the call:",
+            "",
+            *[f"{k}: {v}" for k, v in self.context_data.items()],
+        ]
         return "\n".join(body)
 
     def send(self):
-        connection = boto.ses.connect_to_region(
-            AWS_REGION_NAME, aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY
-        )
-        response = connection.send_email(
-            source=AWS_EMAIL_ADDRESS,
-            subject=self.get_subject(),
-            body=self.get_body(),
-            to_addresses=MANAGER_EMAIL_ADDRESSES,
-            format="text",
+        subject = self.get_subject()
+        body = self.get_body()
+        client = boto3.client("ses")
+        response = client.send_email(
+            Source=SYSTEM_EMAIL_ADDRESS,
+            Destination={"ToAddresses": MANAGER_EMAIL_ADDRESSES},
+            Message={
+                "Body": {
+                    "Text": {"Charset": CHARSET, "Data": body},
+                    "Html": {"Charset": CHARSET, "Data": body.replace("\n", "<br/>")},
+                },
+                "Subject": {"Charset": CHARSET, "Data": subject},
+            },
         )
         return response
 
