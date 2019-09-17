@@ -1,5 +1,6 @@
 import logging
 import os
+from urllib.parse import unquote
 
 import boto3
 from twilio.twiml.voice_response import VoiceResponse
@@ -21,14 +22,14 @@ class Email(object):
 
     def get_subject(self):
         caller = self.context_data.get("From") or "an unknown number"
-        subject = f"You have a missed call from {caller}"
+        subject = f"You have a missed call from {unquote(caller)}"
         return subject
 
     def get_body(self):
         body = [
             "Here you can find all the details about the call:",
             "",
-            *[f"{k}: {v}" for k, v in self.context_data.items()],
+            *[f"{unquote(k)}: {unquote(v)}" for k, v in self.context_data.items()],
         ]
         return "\n".join(body)
 
